@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import '../controllers/user_viewmodel.dart';
 
 class ProfilePage extends StatelessWidget {
+  const ProfilePage({super.key});  // const 키워드 추가
+
+
   @override
   Widget build(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
@@ -15,10 +18,10 @@ class ProfilePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('프로필'),
+        title: const Text('프로필'),
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),  // const 추가
             onPressed: () {
               userViewModel.logout('accessToken');
             },

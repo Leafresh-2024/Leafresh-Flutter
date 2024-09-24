@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'controllers/user_viewmodel.dart';
 import 'views/login_page.dart';
 import 'views/profile_page.dart';
+import 'views/home_page.dart';
+import 'views/market_page.dart';
+import 'views/community_page.dart';
 
 void main() {
   runApp(MainApp());
@@ -18,10 +21,63 @@ class MainApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: LoginPage(),
-        routes: {
-          '/profile': (context) => ProfilePage(),
-        },
+        home: HomeScreen(),  // HomeScreen에서 네비게이션 바 관리
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  // 각 탭에 해당하는 화면 리스트
+  static const List<Widget> _pages = <Widget>[
+   const HomePage(),
+   const MarketPage(),
+   const CommunityPage(),
+   const ProfilePage(),
+  ];
+
+  // 탭 선택 시 호출
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _pages[_selectedIndex],  // 현재 선택된 페이지 표시
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_bag),
+            label: 'Market',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'My Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.white,
+        onTap: _onItemTapped,
       ),
     );
   }
