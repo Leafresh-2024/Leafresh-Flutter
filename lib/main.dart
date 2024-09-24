@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:leafresh/views/home_page.dart';
+import 'package:leafresh/views/market_page.dart';
+import 'package:leafresh/views/profile_page.dart';
 import 'package:provider/provider.dart';
 import 'controllers/user_viewmodel.dart';
 import 'views/login_page.dart';
+
 import 'views/community_page.dart';
 
 void main() {
