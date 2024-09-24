@@ -17,12 +17,12 @@ class ApiService {
       }),
     );
     if (response.statusCode == 200) {
-      // 응답 본문을 JSON으로 디코딩하여 반환
       return json.decode(response.body);
     } else {
       throw Exception('로그인 실패: ${response.statusCode}');
     }
   }
+
 
   Future<User?> fetchUserProfile(String token) async {
     final response = await http.get(
@@ -39,6 +39,41 @@ class ApiService {
     }
   }
 
+  // 커뮤니티 피드 목록 가져오기
+  Future<List<dynamic>> fetchFeeds(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/feeds'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // JSON 데이터를 리스트로 파싱하여 반환
+        List<dynamic> feeds = json.decode(response.body);
+        return feeds.map((feedData) {
+          return {
+            'username': feedData['userNickname'],
+            'userimg': feedData['userProfileImg'],
+            'content': feedData['feedContent'],
+            'time': feedData['feedCreateAt'],
+            'imageUrl': feedData['feedImage'] != null
+                ? '$baseUrl/ftp/image?path=${Uri.encodeComponent(feedData['feedImage'])}'
+                : '/default-profile-image.jpg',
+            'comments': feedData['comments'] ?? [],
+            'feedId': feedData['feedId'],
+          };
+        }).toList();
+      } else {
+        throw Exception('피드 가져오기 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('피드 조회 실패: $e');
+      throw Exception('피드 조회 실패');
+    }
+  }
+
   Future<void> logout(String token) async {
     await http.post(
       Uri.parse('$baseUrl/auth/logout'),
@@ -47,4 +82,7 @@ class ApiService {
       },
     );
   }
+
+
+
 }
