@@ -5,26 +5,53 @@ import '../services/api_service.dart';
 class UserViewModel extends ChangeNotifier {
   User? _user;
   bool _isLoggedIn = false;
+  String? _token;
+
   final ApiService _apiService = ApiService();
 
   User? get user => _user;
   bool get isLoggedIn => _isLoggedIn;
+  String? get token => _token;
 
-  Future<void> fetchUserProfile(String token) async {
+  Future<void> login(String email, String password, BuildContext context) async {
     try {
-      _user = await _apiService.fetchUserProfile(token);
-      _isLoggedIn = true;
-      notifyListeners();
+      final response = await _apiService.login(email, password);
+      if (response != null) {
+        _token = response['accessToken'];
+        await fetchUserProfile(_token!);
+        _isLoggedIn = true;
+        notifyListeners();
+        Navigator.pushReplacementNamed(context, '/community'); // 로그인 후 커뮤니티 페이지로 이동
+      }
     } catch (e) {
       _isLoggedIn = false;
-      print("Error fetching user profile: $e");
+      print("로그인 에러: $e");
     }
   }
 
-  Future<void> logout(String token) async {
-    await _apiService.logout(token);
-    _user = null;
-    _isLoggedIn = false;
-    notifyListeners();
+  Future<void> fetchUserProfile(String token) async {
+    try {
+      final fetchedUser = await _apiService.fetchUserProfile(token);
+      if (fetchedUser != null) {
+        _user = fetchedUser;
+      } else {
+        throw Exception('프로필 데이터를 불러오지 못했습니다.');
+      }
+      notifyListeners();
+    } catch (e) {
+      print("프로필 조회 에러: $e");
+    }
+  }
+
+
+  Future<void> logout(BuildContext context) async {
+    if (_token != null) {
+      await _apiService.logout(_token!);
+      _token = null;
+      _user = null;
+      _isLoggedIn = false;
+      notifyListeners();
+      Navigator.pushReplacementNamed(context, '/login'); // 로그아웃 후 로그인 페이지로 이동
+    }
   }
 }

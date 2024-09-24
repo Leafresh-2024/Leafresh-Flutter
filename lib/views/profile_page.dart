@@ -5,13 +5,12 @@ import '../controllers/user_viewmodel.dart';
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});  // const 키워드 추가
 
-
   @override
   Widget build(BuildContext context) {
     final userViewModel = Provider.of<UserViewModel>(context);
 
     if (!userViewModel.isLoggedIn) {
-      return Center(
+      return const Center(
         child: Text('로그인이 필요합니다.'),
       );
     }
@@ -23,7 +22,7 @@ class ProfilePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),  // const 추가
             onPressed: () {
-              userViewModel.logout('accessToken');
+              userViewModel.logout(context);  // context 전달 (as BuildContext 제거)
             },
           ),
         ],
@@ -33,10 +32,15 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(userViewModel.user?.imageUrl ?? ''),
+              backgroundImage: NetworkImage(
+                userViewModel.user?.imageUrl != null &&
+                    userViewModel.user!.imageUrl.startsWith('http')
+                    ? userViewModel.user!.imageUrl
+                    : 'https://your-default-image-url.com', // 기본 이미지 URL
+              ),
               radius: 40,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text('닉네임: ${userViewModel.user?.userNickname}'),
             Text('이메일: ${userViewModel.user?.email}'),
           ],

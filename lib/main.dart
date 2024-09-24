@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'controllers/user_viewmodel.dart';
 import 'views/login_page.dart';
-import 'views/profile_page.dart';
-import 'views/home_page.dart';
-import 'views/market_page.dart';
 import 'views/community_page.dart';
 
 void main() {
@@ -22,6 +19,11 @@ class MainApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: HomeScreen(),  // HomeScreen에서 네비게이션 바 관리
+        initialRoute: '/login', // 첫 페이지를 로그인 페이지로 설정
+        routes: {
+          '/login': (context) => LoginPage(),
+          '/community': (context) => CommunityPage(),
+        },
       ),
     );
   }
@@ -37,10 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // 각 탭에 해당하는 화면 리스트
   static const List<Widget> _pages = <Widget>[
-   const HomePage(),
-   const MarketPage(),
-   const CommunityPage(),
-   const ProfilePage(),
+    HomePage(),     // HomePage 추가
+    MarketPage(),   // MarketPage 추가
+    CommunityPage(),  // CommunityPage 추가
+    ProfilePage(),  // ProfilePage 추가
   ];
 
   // 탭 선택 시 호출
