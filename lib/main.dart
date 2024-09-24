@@ -1,19 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'controllers/user_viewmodel.dart';
+import 'views/login_page.dart';
+import 'views/profile_page.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
+    return ChangeNotifierProvider(
+      create: (_) => UserViewModel(),
+      child: MaterialApp(
+        title: 'User Profile App',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
         ),
+        home: LoginPage(),
+        routes: {
+          '/profile': (context) => ProfilePage(),
+        },
       ),
     );
   }
