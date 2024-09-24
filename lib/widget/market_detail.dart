@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/market_service.dart';  // MarketService 사용
+import '../services/api_marketService.dart';
 import '../models/market.dart';  // MarketDTO 사용
 import '../controllers/user_viewmodel.dart';  // UserViewModel 사용
 

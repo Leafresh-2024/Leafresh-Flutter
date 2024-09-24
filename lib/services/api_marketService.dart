@@ -43,8 +43,5 @@ class MarketService {
     }
   }
 
-  }
-
-
-
 }
+
