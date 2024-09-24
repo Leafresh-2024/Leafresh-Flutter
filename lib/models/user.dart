@@ -19,13 +19,13 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      userId: json['userId'],
+      userId: json['userId'].toString(), // int 값을 String으로 변환
       userName: json['userName'],
       userNickname: json['userNickname'],
       email: json['email'],
-      userPhoneNumber: json['userPhoneNumber'],
+      userPhoneNumber: json['userPhoneNumber'].toString(), // 마찬가지로 변환
       role: json['role']['name'],
-      imageUrl: json['imageUrl'],
+      imageUrl: json['imageUrl'] ?? 'default-image-url', // 이미지 URL이 없을 경우 기본값 추가
     );
   }
 }
