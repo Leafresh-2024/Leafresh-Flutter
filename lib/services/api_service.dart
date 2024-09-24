@@ -17,7 +17,8 @@ class ApiService {
       }),
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      return json.decode(utf8.decode(response.bodyBytes));
+
     } else {
       throw Exception('로그인 실패: ${response.statusCode}');
     }
@@ -33,7 +34,7 @@ class ApiService {
     );
 
     if (response.statusCode == 200) {
-      return User.fromJson(json.decode(response.body));
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     } else {
       throw Exception('Failed to load user profile');
     }
@@ -51,7 +52,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         // JSON 데이터를 리스트로 파싱하여 반환
-        List<dynamic> feeds = json.decode(response.body);
+        List<dynamic> feeds = json.decode(utf8.decode(response.bodyBytes));
         return feeds.map((feedData) {
           return {
             'username': feedData['userNickname'],
@@ -60,7 +61,7 @@ class ApiService {
             'time': feedData['feedCreateAt'],
             'imageUrl': feedData['feedImage'] != null
                 ? '$baseUrl/ftp/image?path=${Uri.encodeComponent(feedData['feedImage'])}'
-                : '/default-profile-image.jpg',
+                : 'https://your-default-image-url.com/default-profile-image.jpg',
             'comments': feedData['comments'] ?? [],
             'feedId': feedData['feedId'],
           };
