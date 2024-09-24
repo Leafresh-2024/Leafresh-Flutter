@@ -5,6 +5,8 @@ import '../services/api_service.dart';
 import '../widget/community_detail.dart';
 
 class CommunityPage extends StatefulWidget {
+  const CommunityPage({super.key});  // const 추가
+
   @override
   _CommunityPageState createState() => _CommunityPageState();
 }
@@ -53,23 +55,23 @@ class _CommunityPageState extends State<CommunityPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('커뮤니티'),
+        title: const Text('커뮤니티'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator()) // 로딩 중일 때
           : ListView.builder(
-        itemCount: feeds.length,
-        itemBuilder: (context, index) {
-          final feed = feeds[index];
-          return CommunityDetail(
-            feed: feed,
-            onAddComment: (comment) {
-              // 여기에 댓글 추가 로직을 작성합니다
-              print('댓글이 추가되었습니다: $comment');
-            },
-          );
-        },
-      ),
+              itemCount: feeds.length,
+              itemBuilder: (context, index) {
+                final feed = feeds[index];
+                return CommunityDetail(
+                  feed: feed,
+                  onAddComment: (comment) {
+                    // 여기에 댓글 추가 로직을 작성합니다
+                    print('댓글이 추가되었습니다: $comment');
+                  },
+                );
+              },
+            ),
     );
   }
 }

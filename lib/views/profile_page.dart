@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../controllers/user_viewmodel.dart';
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key});  // const 키워드 추가
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +20,9 @@ class ProfilePage extends StatelessWidget {
         title: const Text('프로필'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout),  // const 추가
             onPressed: () {
-              userViewModel.logout('accessToken' as BuildContext);
+              userViewModel.logout(context);  // context 전달 (as BuildContext 제거)
             },
           ),
         ],
