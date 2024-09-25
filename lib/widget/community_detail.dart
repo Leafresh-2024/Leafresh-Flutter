@@ -19,38 +19,42 @@ class CommunityDetail extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage(feed['userimg']),
+                  backgroundImage: NetworkImage(
+                    feed['userimg'] ?? 'https://your-default-image-url.com',
+                  ),
                   radius: 20,
                 ),
                 SizedBox(width: 10),
-                Text(feed['username']),
+                Text(feed['username'] ?? 'Unknown'),
               ],
             ),
             SizedBox(height: 10),
-            Image.network(feed['imageUrl']),
+            feed['imageUrl'] != null && feed['imageUrl'].isNotEmpty
+                ? Image.network(feed['imageUrl'])
+                : SizedBox.shrink(), // 이미지가 없을 경우 빈 공간 처리
             SizedBox(height: 10),
-            Text(feed['content']),
+            Text(feed['content'] ?? 'No content'),
             SizedBox(height: 10),
-            Text('작성일자: ${feed['time']}'),
+            Text('작성일자: ${feed['time'] ?? 'Unknown date'}'),
             Divider(),
             Text('댓글'),
             ListView.builder(
               shrinkWrap: true,
-              itemCount: feed['comments'].length,
+              itemCount: feed['comments'] != null ? feed['comments'].length : 0,
               itemBuilder: (context, index) {
                 final comment = feed['comments'][index];
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(
-                      feed['userimg'] != null && feed['userimg'].contains('http')
-                          ? feed['userimg']
+                      comment['userimg'] != null && comment['userimg'].contains('http')
+                          ? comment['userimg']
                           : 'https://your-default-image-url.com',
                     ),
                     radius: 20,
                   ),
-                  title: Text(comment['userNickname']),
-                  subtitle: Text(comment['replyContent']),
-                  trailing: Text(comment['displayDate']),
+                  title: Text(comment['userNickname'] ?? 'Unknown User'),
+                  subtitle: Text(comment['replyContent'] ?? 'No content'),
+                  trailing: Text(comment['displayDate'] ?? 'Unknown date'),
                 );
               },
             ),

@@ -27,6 +27,7 @@ class MarketService {
   }
 
   // 마켓 상세정보를 가져오는 메서드
+
   Future<MarketDTO> fetchMarketDetail(String token, int marketId) async {
     final response = await http.get(
       Uri.parse('$baseUrl/market/detail/$marketId'),
