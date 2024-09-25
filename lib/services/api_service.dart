@@ -84,6 +84,20 @@ class ApiService {
     );
   }
 
+    // 유저정보를 이메일을 통해 가져온다.
+  Future<User?> fetchUserProfileByEmail(String token, String email) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/user/profile?email=$email'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
 
+    if (response.statusCode == 200) {
+      return User.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('유저 프로필 가져오기 실패: ${response.statusCode}');
+    }
+  }
 
 }

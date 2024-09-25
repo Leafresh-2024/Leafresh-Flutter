@@ -54,4 +54,22 @@ class UserViewModel extends ChangeNotifier {
       Navigator.pushReplacementNamed(context, '/login'); // 로그아웃 후 로그인 페이지로 이동
     }
   }
+
+  // 유저 이메일을 통해서 유저 정보를 불러온다.
+  Future<void> fetchUserByEmail(String email) async {
+
+    try{
+      final response = await ApiService().fetchUserProfileByEmail(_token!, email);
+      if (response != null) {
+        _user = response;
+        notifyListeners();
+      }
+    } catch (e) {
+      print("유저정보 조회실패: $e");
+    }
+
+  }
+
+
+
 }

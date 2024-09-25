@@ -20,7 +20,7 @@ class CommunityDetail extends StatelessWidget {
               children: [
                 CircleAvatar(
                   backgroundImage: NetworkImage(
-                    feed['userimg'] ?? 'https://your-default-image-url.com',
+                    feed['userimg'] ?? 'https://your-default-image-url.com', // 프로필에도 업로드한 이미지가 나와버림.
                   ),
                   radius: 20,
                 ),

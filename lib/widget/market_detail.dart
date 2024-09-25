@@ -17,6 +17,8 @@ class MarketDetail extends StatelessWidget {
         ? 'http://10.0.2.2:8080/ftp/image?path=${Uri.encodeComponent(market.marketImage)}'
         : 'https://your-default-image-url.com/default-market-image.jpg'; // 기본 이미지
 
+    // marketStatus를 기반으로 분양 상태 표시
+    String marketStatus = market.marketStatus == 'true' ? '분양중' : '분양 완료';
 
     return Card(
       margin: const EdgeInsets.all(10),
@@ -45,12 +47,17 @@ class MarketDetail extends StatelessWidget {
             Text(market.marketContent),
             const SizedBox(height: 10),
             Text('등록일자: ${market.marketCreatedAt}'),
+            const SizedBox(height: 10),
+            Text('$marketStatus', style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: market.marketStatus == 'true' ? Colors.green : Colors.grey,  // 상태에 따른 색상 변화
+            )),
             const Divider(),
             ElevatedButton(
               onPressed: () {
                 onViewDetail(int.parse(market.marketId));  // marketId는 문자열이므로 int로 변환
               },
-              child: const Text('자세히보기'),
+              child: const Text('연락하기'),
             )
           ],
         ),
