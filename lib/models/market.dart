@@ -7,7 +7,7 @@ class MarketDTO {
   final String marketStatus;
   final String marketVisibleScope;
   final String marketCreatedAt;
-  final String userEmail;
+  final String userEmail; // userID 바꾸자
 
   MarketDTO({
     required this.marketId,
