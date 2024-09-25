@@ -4,76 +4,54 @@ import '../services/api_marketService.dart';
 import '../models/market.dart';  // MarketDTO 사용
 import '../controllers/user_viewmodel.dart';  // UserViewModel 사용
 
-class MarketDetailPage extends StatefulWidget {
-  final int marketId;
+class MarketDetail extends StatelessWidget {
+  final MarketDTO market;
+  final Function(int) onViewDetail;
 
-  const MarketDetailPage({required this.marketId, super.key});
-
-  @override
-  _MarketDetailPageState createState() => _MarketDetailPageState();
-}
-
-class _MarketDetailPageState extends State<MarketDetailPage> {
-  late MarketDTO market;
-  bool isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchMarketDetail();
-    });
-  }
-
-  // 마켓 상세 정보를 불러오는 함수
-  Future<void> fetchMarketDetail() async {
-    try {
-      final token = Provider.of<UserViewModel>(context, listen: false).token;
-
-      if (token == null) {
-        throw Exception('토큰이 없습니다. 로그인이 필요합니다.');
-      }
-
-      final marketDetail = await MarketService().fetchMarketDetail(token, widget.marketId);
-      setState(() {
-        market = marketDetail;
-        isLoading = false;
-      });
-    } catch (e) {
-      print('마켓 상세 정보 조회 실패: $e');
-    }
-  }
+  MarketDetail({required this.market, required this.onViewDetail});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('마켓 상세보기'),
-      ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())  // 로딩 중일 때
-          : Padding(
+    // 이미지 경로를 FTP API 경로로 변환
+    String imageUrl = market.marketImage.isNotEmpty
+        ? 'http://10.0.2.2:8080/ftp/image?path=${Uri.encodeComponent(market.marketImage)}'
+        : 'https://your-default-image-url.com/default-market-image.jpg'; // 기본 이미지
+
+
+    return Card(
+      margin: const EdgeInsets.all(10),
+      child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              market.marketImage.isNotEmpty
-                  ? market.marketImage
-                  : 'https://your-default-image-url.com/default-image.jpg',
-              fit: BoxFit.cover,
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(imageUrl),
+                  radius: 20,
+                ),
+                const SizedBox(width: 10),
+                Text(market.userEmail),  // userNickname 대신 userEmail로 수정
+              ],
             ),
             const SizedBox(height: 10),
-            Text(
-              market.marketTitle,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            market.marketImage.isNotEmpty
+                ? Image.network(imageUrl) // FTP 서버 경로로부터 이미지 불러오기
+                : const SizedBox.shrink(), // 이미지가 없을 경우 빈 공간 처리
+            const SizedBox(height: 10),
+            Text(market.marketTitle),
             const SizedBox(height: 10),
             Text(market.marketContent),
             const SizedBox(height: 10),
-            Text('게시일자: ${market.marketCreatedAt}'),
-            const SizedBox(height: 10),
-            Text('게시자 이메일: ${market.userEmail}'),
+            Text('등록일자: ${market.marketCreatedAt}'),
+            const Divider(),
+            ElevatedButton(
+              onPressed: () {
+                onViewDetail(int.parse(market.marketId));  // marketId는 문자열이므로 int로 변환
+              },
+              child: const Text('자세히보기'),
+            )
           ],
         ),
       ),
